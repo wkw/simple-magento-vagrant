@@ -2,7 +2,7 @@
 
 SAMPLE_DATA=$1
 MAGE_VERSION="1.9.1.0"
-DATA_VERSION="1.9.0.0"
+DATA_VERSION="1.9.1.0"
 
 # Update Apt
 # --------------------
@@ -14,6 +14,11 @@ apt-get install -y apache2
 apt-get install -y php5
 apt-get install -y libapache2-mod-php5
 apt-get install -y php5-mysqlnd php5-curl php5-xdebug php5-gd php5-intl php-pear php5-imap php5-mcrypt php5-ming php5-ps php5-pspell php5-recode php5-snmp php5-sqlite php5-tidy php5-xmlrpc php5-xsl php-soap
+
+# Install extras
+# ---------------------
+apt-get install -y git
+
 
 php5enmod mcrypt
 
@@ -68,8 +73,10 @@ mysql -u root -e "FLUSH PRIVILEGES"
 # Download and extract
 if [[ ! -f "/vagrant/httpdocs/index.php" ]]; then
   cd /vagrant/httpdocs
-  wget --no-verbose http://www.magentocommerce.com/downloads/assets/${MAGE_VERSION}/magento-${MAGE_VERSION}.tar.gz
-  tar -zxvf magento-${MAGE_VERSION}.tar.gz
+  echo "--------------- Cloning magento-mirror ---------------"
+  git clone -q https://github.com/OpenMage/magento-mirror.git magento
+  #wget --no-verbose http://www.magentocommerce.com/downloads/assets/${MAGE_VERSION}/magento-${MAGE_VERSION}.tar.gz
+  #tar -zxvf magento-${MAGE_VERSION}.tar.gz
   mv magento/* magento/.htaccess .
   chmod -R o+w media var
   chmod o+w app/etc
